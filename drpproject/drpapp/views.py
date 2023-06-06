@@ -7,10 +7,9 @@ from .SainsburysSearch import searchSainsburys
 from .models import DietForm, DietaryRestriction
 import concurrent.futures
 import spacy
+from silk.profiling.profiler import silk_profile
 
-def index(request):
-    return render(request, "drpapp/index.html")
-
+@silk_profile(name='token_good')
 def token_good(token):
     units = ["tbsp", "tsp", "g", "kg", "oz", "ml", "l", "pack", "tub", "bag", "jar", "1/2", "1/4"]
     if not (token.pos_ == "NOUN" or token.pos_ == "ADJ"):
@@ -19,14 +18,12 @@ def token_good(token):
         return False
     return True
 
-def recommendations(request):
-    return render(request, "drpapp/recommendations.html")
-
+@silk_profile(name='comparison')
 def comparison(request): 
     # Get what the user typed in the search bar (the recipe url) after they press the enter button
-    query = request.GET.get('query', '')
+    query = "https://www.bbcgoodfood.com/recipes/basic-omelette"
 
-    instance_id = request.session.get('instance_id')
+    instance_id = None
 
     ingredients_start_time = timer()
     original_ingredients = get_ingredients(query)
@@ -83,32 +80,7 @@ def comparison(request):
     
     return render(request, "drpapp/comparison.html", context)
 
-def diet(request):
-    if request.method == 'POST':
-        form = DietForm(request.POST)
-        if form.is_valid():
-            # save form data to the database
-            instance = form.save()  
-            request.session['instance_id'] = instance.id
-            # redirect to home page (index)
-            return redirect('index')
-
-    else:
-        instance_id = request.session.get('instance_id')
-        instance = DietaryRestriction.objects.filter(id=instance_id).first()
-        form = DietForm(instance=instance)
-
-        # initial_data = {
-        #     'vegan': request.GET.get('vegan', False), # request.session.get?
-        #     'vegetarian': request.GET.get('vegetarian', False),
-        #     'gluten_free': request.GET.get('gluten_free', False) 
-        # }
-        # form = DietForm(initial=initial_data)
-
-    context = {'form': form }
-
-    return render(request, 'drpapp/diet.html', context)
-
+@silk_profile(name='get_tesco_links')
 def get_tesco_product_links(items):
     # A Tesco link looks like this: https://www.tesco.com/groceries/en-GB/products/<product-id>
     base_url = "https://www.tesco.com/groceries/en-GB/products/"
@@ -117,9 +89,11 @@ def get_tesco_product_links(items):
             items[ingredient] = base_url + items[ingredient]
     return items
 
+@silk_profile(name='get_sainsburrys_links')
 def get_sainsburys_product_links(items):
     return items
 
+@silk_profile(name='get_asda_links')
 def get_asda_product_links(items):
     # An ASDA link looks like this: https://groceries.asda.com/product/<product-id>
     base_url = "https://groceries.asda.com/product/"
@@ -128,6 +102,7 @@ def get_asda_product_links(items):
             items[ingredient] = base_url + items[ingredient]
     return items
    
+@silk_profile(name='money_value')
 def money_value(price):
     if str(price)[0].isnumeric():
         val = price
@@ -136,6 +111,7 @@ def money_value(price):
         val = price[1:]
     return round(float(val), 2)
 
+@silk_profile(name='tesco_worker')
 def tesco_worker(ingredient, items, form_instance):
     most_relevant_item = getMostRelevantItemTesco(str(ingredient), form_instance)
     price = most_relevant_item['price']
@@ -144,6 +120,7 @@ def tesco_worker(ingredient, items, form_instance):
     items[ingredient] = item_id
     return price
 
+@silk_profile(name='sainsburrys_worker')
 def sainsburys_worker(ingredient, items, form_instance):
     most_relevant_item = searchSainsburys(ingredient, form_instance)
     if most_relevant_item is not None:
@@ -154,7 +131,8 @@ def sainsburys_worker(ingredient, items, form_instance):
     else:
         items[ingredient] = "INVALID"
         return 0
-
+    
+@silk_profile(name='asda_worker')
 def asda_worker(ingredient, items, form_instance):
     most_relevant_item = searchAsda(ingredient, form_instance)
     if most_relevant_item is not None:
@@ -168,6 +146,7 @@ def asda_worker(ingredient, items, form_instance):
         items[ingredient] = "INVALID"
         return 0 
 
+@silk_profile(name='total_price_tesco')
 def total_price_tesco(ingredients, instance_id):
     items = {}
     num_threads = 5
@@ -193,6 +172,7 @@ def total_price_tesco(ingredients, instance_id):
 
     return total_price, item_links
 
+@silk_profile(name='total_price_asda')
 def total_price_asda(ingredients, instance_id):
     items = {}
     num_threads = 2
@@ -219,6 +199,7 @@ def total_price_asda(ingredients, instance_id):
 
     return total_price, item_links
 
+@silk_profile(name='total_price_sainsburys')
 def total_price_sainsburys(ingredients, instance_id):
     items = {}
     num_threads = 3

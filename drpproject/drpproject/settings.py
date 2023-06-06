@@ -27,8 +27,8 @@ STATIC_ROOT = BASE_DIR/'staticfiles'
 SECRET_KEY = os.environ.get('SECRET_KEY', default='foo')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = int(os.environ.get('DEBUG', default=0))
+DEBUG = True
+#DEBUG = int(os.environ.get('DEBUG', default=0))
 
 ALLOWED_HOSTS = [
     'localhost',                     # Local
@@ -58,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'silk.middleware.SilkyMiddleware',
 ]
 
 ROOT_URLCONF = 'drpproject.urls'
@@ -191,10 +192,14 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Add custom tags
-INSTALLED_APPS += ['drpapp.templatetags.custom_tags']
+INSTALLED_APPS += ['drpapp.templatetags.custom_tags', 'silk']
 
 # CSRF trusted origins
 CSRF_TRUSTED_ORIGINS = ['https://icl-drp-group01.herokuapp.com']
 
 # Save session to database
 SESSION_SAVE_EVERY_REQUEST = True
+
+# Django Silk configuration
+SILKY_PYTHON_PROFILER = True
+SILKY_PYTHON_PROFILER_BINARY = True
