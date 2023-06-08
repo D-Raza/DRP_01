@@ -21,6 +21,8 @@
             margin-bottom: 20px;
             background-color: #fff;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
@@ -75,6 +77,33 @@
             text-decoration: none;
         }
     </style>
+
+<script>
+    document.getElementById("add-button").addEventListener("click", function() {
+        console.log("Button clicked!");
+        var ingredientInput = document.getElementById("ingredient-input").value;
+        var formData = new FormData();
+        formData.append("ingredient", ingredientInput);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '{% url "add_ingredient" %}', true);
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    // Handle the response from Django
+                    console.log("Ingredient added successfully!");
+                } else {
+                    // Handle error cases
+                    console.log("Error adding ingredient.");
+                }
+            }
+        };
+
+        xhr.send(formData);
+    });
+</script>
+
 </head>
 <body>
     {% load custom_tags %}
@@ -92,6 +121,9 @@
         <form method="POST" action="{% url 'comparison' %}">
             {% csrf_token %}
             {{ ingredients_form.as_p }}
+            <input type="text" placeholder="Add another ingredient">
+            <button id = "add-button" type="button">+</button>
+            <p></p>
             <button type="submit">Recalculate prices</button>
         </form>
     </div>

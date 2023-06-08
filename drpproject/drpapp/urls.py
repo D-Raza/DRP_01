@@ -11,4 +11,5 @@ urlpatterns = [
     path("diet/", views.diet, name="diet"),
     # ex: /drpapp/recommendations/ - the recipe recommendations page
     path("recommendations/", views.recommendations, name="recommendations"),
+    path('add-ingredient/', views.add_ingredient, name='add_ingredient')
 ]

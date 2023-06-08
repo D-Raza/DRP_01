@@ -7,6 +7,24 @@ from .MorrisonsSearch import search_morrisons
 from .NLP import *
 from .models import DietForm, DietaryRestriction, IngredientsForm
 import concurrent.futures
+from django.http import JsonResponse
+
+def add_ingredient(request):
+    if request.method == 'POST':
+        ingredient = request.POST.get('ingredient')
+        
+        # Perform your logic to update the "ingredients" list
+        # For example, you can store the ingredient in the database, session, or any other storage mechanism
+        ingredients.append(ingredient)
+        
+        # Return a JSON response indicating success
+        response_data = {'success': True}
+        return JsonResponse(response_data)
+    
+    # Return an error JSON response if the request method is not POST
+    response_data = {'error': 'Invalid request method'}
+    return JsonResponse(response_data, status=400)
+
 
 def index(request):
     return render(request, "drpapp/index.html")
