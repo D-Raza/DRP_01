@@ -177,80 +177,90 @@
         </div>
     </div>
 
-    <table>
-        <caption>Price Comparison</caption>
-        <thead>
-            <tr>
-                <th>Ingredient</th> <!-- New column for row names -->
-                    {% if lowest_total_price_market == "Sainsbury's" %}
-                        <th class="lowest-price">Sainsbury's<br>(Total Price: £{{ sainsburys_total_price }})</br></th>
-                    {% else %}    
-                        <th class="not-lowest-price">Sainsbury's<br>(Total Price: £{{ sainsburys_total_price }})</br></th>
-                    {% endif %}
-
-                    {% if lowest_total_price_market == "Asda" %}
-                        <th class="lowest-price">Asda<br>(Total Price: £{{ asda_total_price }})</br></th>
-                    {% else %}    
-                        <th class="not-lowest-price">Asda<br>(Total Price: £{{ asda_total_price }})</br></th>
-                    {% endif %}
-
-
-                    {% if lowest_total_price_market == "Morrisons" %}
-                        <th class="lowest-price">Morrisons<br>(Total Price: £{{ morrisons_total_price }})</br></th>
-                    {% else %}    
-                        <th class="not-lowest-price">Morrisons<br>(Total Price: £{{ morrisons_total_price }})</br></th>
-                    {% endif %}
-
-                    {% if lowest_total_price_market == "Tesco" %}
-                        <th class="lowest-price">Tesco<br>(Total Price: £{{ tesco_total_price }})</br></th>
-                    {% else %}    
-                        <th class="not-lowest-price">Tesco<br>(Total Price: £{{ tesco_total_price }})</br></th>
-                    {% endif %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for ingredient, link in sainsburys_item_links.items %}
+    <div class = "comparison-table-and-button-wrapper">
+        <table>
+            <caption>Price Comparison</caption>
+            <thead>
                 <tr>
-                    <td>{{ ingredient }}</td> <!-- New column for row names -->
-                    <td>
-                        {% with sainsburys_result=sainsburys_item_links|dict_lookup:ingredient %}
-                            {% if sainsburys_result.0 != "INVALID" %}
-                                <a href="{{ sainsburys_result.0 }}">{{ sainsburys_result.1 }}</a>
-                            {% else %}
-                                Not Found
-                            {% endif %}
-                        {% endwith %}
-                    </td>
-                    <td>
-                        {% with asda_result=asda_item_links|dict_lookup:ingredient %}
-                            {% if asda_result.0 != "INVALID" %}
-                                <a href="{{ asda_result.0 }}">{{ asda_result.1 }}</a>
-                            {% else %}
-                                Not Found
-                            {% endif %}
-                        {% endwith %}
-                    </td>
-                    <td>
-                        {% with morrisons_result=morrisons_item_links|dict_lookup:ingredient %}
-                            {% if morrisons_result.0 != "INVALID" %}
-                                <a href="{{ morrisons_result.0 }}">{{ morrisons_result.1 }}</a>
-                            {% else %}
-                                Not Found
-                            {% endif %}
-                        {% endwith %}
-                    </td>
-                    <td>
-                        {% with tesco_result=tesco_item_links|dict_lookup:ingredient %}
-                            {% if tesco_result.0 != "INVALID" %}
-                                <a href="{{ tesco_result.0 }}">{{ tesco_result.1 }}</a>
-                            {% else %}
-                                Not Found
-                            {% endif %}
-                        {% endwith %}
-                    </td>
+                    <th>Ingredient</th> <!-- New column for row names -->
+                        {% if cheapest_total_market == "Sainsbury's" %}
+                            <th class="lowest-price">Sainsbury's<br>(Total Price: £{{ sainsburys_total_price }})</br></th>
+                        {% else %}    
+                            <th class="not-lowest-price">Sainsbury's<br>(Total Price: £{{ sainsburys_total_price }})</br></th>
+                        {% endif %}
+
+                        {% if cheapest_total_market == "Asda" %}
+                            <th class="lowest-price">Asda<br>(Total Price: £{{ asda_total_price }})</br></th>
+                        {% else %}    
+                            <th class="not-lowest-price">Asda<br>(Total Price: £{{ asda_total_price }})</br></th>
+                        {% endif %}
+
+
+                        {% if cheapest_total_market == "Morrisons" %}
+                            <th class="lowest-price">Morrisons<br>(Total Price: £{{ morrisons_total_price }})</br></th>
+                        {% else %}    
+                            <th class="not-lowest-price">Morrisons<br>(Total Price: £{{ morrisons_total_price }})</br></th>
+                        {% endif %}
+
+                        {% if cheapest_total_market == "Tesco" %}
+                            <th class="lowest-price">Tesco<br>(Total Price: £{{ tesco_total_price }})</br></th>
+                        {% else %}    
+                            <th class="not-lowest-price">Tesco<br>(Total Price: £{{ tesco_total_price }})</br></th>
+                        {% endif %}
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for ingredient, link in sainsburys_item_links.items %}
+                    <tr>
+                        <td>{{ ingredient }}</td> <!-- New column for row names -->
+                        <td>
+                            {% with sainsburys_result=sainsburys_item_links|dict_lookup:ingredient %}
+                                {% if sainsburys_result.0 != "INVALID" %}
+                                    <a href="{{ sainsburys_result.0 }}">{{ sainsburys_result.1 }}</a>
+                                {% else %}
+                                    Not Found
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                        <td>
+                            {% with asda_result=asda_item_links|dict_lookup:ingredient %}
+                                {% if asda_result.0 != "INVALID" %}
+                                    <a href="{{ asda_result.0 }}">{{ asda_result.1 }}</a>
+                                {% else %}
+                                    Not Found
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                        <td>
+                            {% with morrisons_result=morrisons_item_links|dict_lookup:ingredient %}
+                                {% if morrisons_result.0 != "INVALID" %}
+                                    <a href="{{ morrisons_result.0 }}">{{ morrisons_result.1 }}</a>
+                                {% else %}
+                                    Not Found
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                        <td>
+                            {% with tesco_result=tesco_item_links|dict_lookup:ingredient %}
+                                {% if tesco_result.0 != "INVALID" %}
+                                    <a href="{{ tesco_result.0 }}">{{ tesco_result.1 }}</a>
+                                {% else %}
+                                    Not Found
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="basket-button-wrapper">
+            <div></div> <!-- empty div to fill space in 1st column - don't remove  -->
+            <div><button id="go-to-basket-button-sainsburys">Basket<br/>(Requires Account)</button></div>
+            <div><button id="go-to-basket-button-asda">Basket<br/>(Requires Account)</button></div>
+            <div><button id="go-to-basket-button-morrisons">Basket<br/>(Requires Account)</button></div>
+            <div><button id="go-to-basket-button-tesco">Basket<br/>(Requires Account)</button></div>
+        </div>
+    </div>
+
 </body>
 </html>
