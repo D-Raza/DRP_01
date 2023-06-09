@@ -105,15 +105,11 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
-            /* display: grid
-            grid-template-columns: 1fr 1fr 1fr 1fr 1fr; */
         }
         table {
             width: 100%;
         }
         .basket-button-wrapper {
-            /* grid-column: 5;
-            align-self: start; */
             width: 100%;
             margin-top: 20px; /* space between table and button */
             justify-content: space-between;
@@ -299,8 +295,7 @@
                 }
             });
 
-            // Get the product IDs from the links
-            // e.g. "https://www.tesco.com/groceries/en-GB/products/305837834" -> "305837834"
+            // Get the product IDs from the links (e.g. "https://www.tesco.com/groceries/en-GB/products/305837834" -> "305837834")
             const productIds = tescoItemLinks.map(link => link.split('/').pop());
 
             const payload = {
@@ -358,10 +353,5 @@
         const button = document.getElementById("go-to-basket-button-tesco");
         button.addEventListener('click', addToTescoBasket);
     </script>
-
-    <!-- <script id="tesco_item_links" type="application/json">
-        
-    </script> -->
-
 </body>
 </html>
