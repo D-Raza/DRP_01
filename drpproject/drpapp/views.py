@@ -9,6 +9,7 @@ from .models import DietForm, DietaryRestriction, IngredientsForm
 import concurrent.futures
 from django.http import JsonResponse
 import requests
+from django.middleware import csrf
 
 dietary_preferences = [
     "vegan",
@@ -149,6 +150,7 @@ def proxy_tesco_basket(request):
             'accept-language': 'en-GB,en;q=0.9',
             'path': '/groceries/en-GB/trolley/items?_method=PUT',
             'content-type': 'application/json',
+            'X-CSRFToken': csrf.get_token(request),
             # 'referer': 'https://www.tesco.com/groceries/en-GB/trolley',
             # 'origin': 'https://www.tesco.com',
         }

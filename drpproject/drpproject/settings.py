@@ -211,5 +211,15 @@ INSTALLED_APPS += ['drpapp.templatetags.custom_tags']
 # CSRF trusted origins
 CSRF_TRUSTED_ORIGINS = ['https://icl-drp-group01.herokuapp.com']
 
+CSRF_COOKIE_SAMESITE = 'Lax'
+
+MIDDLEWARE = [
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware'
+    # other middleware...
+]
+
 # Save session to database
 SESSION_SAVE_EVERY_REQUEST = True
